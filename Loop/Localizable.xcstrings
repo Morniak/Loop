@@ -25834,17 +25834,6 @@
         }
       }
     },
-    "Window Direction/Name: Unstash All" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Unstash All"
-          }
-        }
-      }
-    },
     "Window Direction/Name: Vertical Center Half" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -295,7 +295,7 @@ private extension WindowAction {
         } else if let stashDirection = StashDirection(direction: direction), let window {
             let window = StashedWindow(window: window, screenBounds: bounds, direction: stashDirection)
             result = window.computeRevealedFrame()
-        } else if let window, [.unstash, .unstashAll].contains(direction) {
+        } else if direction == .unstash, let window {
             result = getInitialFrame(window)
         }
 
