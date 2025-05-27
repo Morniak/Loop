@@ -372,12 +372,6 @@ private extension LoopManager {
             parentCycleAction = nil
         }
 
-        if let window = targetWindow {
-            if stashManager.handle(window: window, on: currentScreen, action: newAction) {
-                return
-            }
-        }
-
         if newAction.direction.willChangeScreen {
             var newScreen = currentScreen
 
