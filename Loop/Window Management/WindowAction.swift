@@ -152,7 +152,7 @@ struct WindowAction: Codable, Identifiable, Hashable, Equatable, Defaults.Serial
             LoopManager.sidesToAdjust = nil
         }
 
-        var bounds: CGRect = getBounds(from: bounds, disablePadding: disablePadding, screen: screen)
+        var bounds: CGRect = Self.getBounds(from: bounds, disablePadding: disablePadding, screen: screen)
         var result: CGRect = calculateTargetFrame(direction, window, bounds, isPreview)
 
         if !disablePadding {
@@ -185,10 +185,10 @@ struct WindowAction: Codable, Identifiable, Hashable, Equatable, Defaults.Serial
     }
 }
 
-// MARK: - Window Frame Calculations
+// MARK: - Static methods for bounds calculation
 
-private extension WindowAction {
-    func getBounds(from originalBounds: CGRect, disablePadding: Bool, screen: NSScreen?) -> CGRect {
+extension WindowAction {
+    static func getBounds(from originalBounds: CGRect, disablePadding: Bool, screen: NSScreen?) -> CGRect {
         // Get padded bounds only if padding can be applied
         if !disablePadding && Defaults[.enablePadding],
            Defaults[.paddingMinimumScreenSize] == .zero || screen?.diagonalSize ?? .zero > Defaults[.paddingMinimumScreenSize] {
@@ -198,6 +198,23 @@ private extension WindowAction {
         }
     }
 
+    // This will apply padding to the bounds of the frame
+    private static func getPaddedBounds(_ bounds: CGRect) -> CGRect {
+        let padding = Defaults[.padding]
+
+        var bounds = bounds
+        bounds = bounds.padding(.top, padding.totalTopPadding)
+        bounds = bounds.padding(.bottom, padding.bottom)
+        bounds = bounds.padding(.leading, padding.left)
+        bounds = bounds.padding(.trailing, padding.right)
+
+        return bounds
+    }
+}
+
+// MARK: - Window Frame Calculations
+
+private extension WindowAction {
     func calculateTargetFrame(_ direction: WindowDirection, _ window: Window?, _ bounds: CGRect, _ isPreview: Bool) -> CGRect {
         var result: CGRect = .zero
 
@@ -506,19 +523,6 @@ private extension WindowAction {
         }
 
         return result
-    }
-
-    // This will apply padding to the bounds of the frame
-    func getPaddedBounds(_ bounds: CGRect) -> CGRect {
-        let padding = Defaults[.padding]
-
-        var bounds = bounds
-        bounds = bounds.padding(.top, padding.totalTopPadding)
-        bounds = bounds.padding(.bottom, padding.bottom)
-        bounds = bounds.padding(.leading, padding.left)
-        bounds = bounds.padding(.trailing, padding.right)
-
-        return bounds
     }
 
     // This will apply padding within the frame, in between windows
